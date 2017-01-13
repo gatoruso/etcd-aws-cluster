@@ -59,10 +59,10 @@ else
 fi
 
 etcd_client_scheme=${ETCD_CLIENT_SCHEME:-http}
-echo "client_client_scheme=$etcd_client_scheme"
+echo "etcd_client_scheme=$etcd_client_scheme"
 
 etcd_peer_scheme=${ETCD_PEER_SCHEME:-http}
-echo "peer_peer_scheme=$etcd_peer_scheme"
+echo "etcd_peer_scheme=$etcd_peer_scheme"
 
 etcd_peer_urls=$(aws ec2 describe-instances --instance-ids $(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name "$asg_name" | jq '.AutoScalingGroups[0].Instances[] | select(.LifecycleState  == "InService") | .InstanceId' | xargs) | jq -r ".Reservations[].Instances | map(\"$etcd_client_scheme://\" + .NetworkInterfaces[].PrivateIpAddress + \":$client_port\")[]")
 if [[ ! $etcd_peer_urls ]]; then
@@ -86,9 +86,9 @@ for url in $etcd_peer_urls; do
 
     if [[ $? == 0 && $etcd_members ]]; then
         etcd_good_member_url="$url"
-		echo "etcd_members=$etcd_members"
+        echo "etcd_members=$etcd_members"
         etcd_existing_peer_urls=$(echo "$etcd_members" | jq --raw-output .[][].peerURLs[0])
-		etcd_existing_peer_names=$(echo "$etcd_members" | jq --raw-output .[][].name)
+	etcd_existing_peer_names=$(echo "$etcd_members" | jq --raw-output .[][].name)
 	break
     fi
 done
