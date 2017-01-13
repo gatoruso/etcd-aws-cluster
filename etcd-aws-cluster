@@ -172,7 +172,7 @@ if [[ $etcd_existing_peer_urls && $etcd_existing_peer_names != *"$ec2_instance_h
 
     cat > "$etcd_peers_file_path" <<EOF
 ETCD_INITIAL_CLUSTER_STATE=existing
-ETCD_NAME=$ec2_instance_id
+ETCD_NAME=$ec2_instance_hostname
 ETCD_INITIAL_CLUSTER=$etcd_initial_cluster
 ETCD_PROXY=$etcd_proxy
 EOF
@@ -191,7 +191,7 @@ else
 
     cat > "$etcd_peers_file_path" <<EOF
 ETCD_INITIAL_CLUSTER_STATE=new
-ETCD_NAME=$ec2_instance_id
+ETCD_NAME=$ec2_instance_hostname
 ETCD_INITIAL_CLUSTER=$etcd_initial_cluster
 EOF
 fi
