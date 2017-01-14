@@ -1,7 +1,7 @@
 #! /bin/bash
 pkg="etcd-aws-cluster"
 version="0.5"
-etcd_peers_file_path="/etc/sysconfig/etcd-peers"
+etcd_env_file_path="/etc/sysconfig/etcd.env"
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq --raw-output .region)
 if [[ ! $AWS_DEFAULT_REGION ]]; then
     echo "$pkg: failed to get region"
@@ -24,8 +24,8 @@ retry_times=${RETRY_TIMES:-10}
 wait_time=3
 
 #if the script has already run just exit
-if [ -f "$etcd_peers_file_path" ]; then
-    echo "$pkg: etcd-peers file $etcd_peers_file_path already created, exiting"
+if [ -f "$etcd_env_file_path" ]; then
+    echo "$pkg: etcd-peers file $etcd_env_file_path already created, exiting"
     exit 0
 fi
 
@@ -170,7 +170,7 @@ if [[ $etcd_existing_peer_urls && $etcd_existing_peer_names != *"$ec2_instance_h
         fi
     fi
 
-    cat > "$etcd_peers_file_path" <<EOF
+    cat > "$etcd_env_file_path" <<EOF
 ETCD_INITIAL_CLUSTER_STATE=existing
 ETCD_NAME=$ec2_instance_hostname
 ETCD_INITIAL_CLUSTER=$etcd_initial_cluster
@@ -189,7 +189,7 @@ else
         exit 10
     fi
 
-    cat > "$etcd_peers_file_path" <<EOF
+    cat > "$etcd_env_file_path" <<EOF
 ETCD_INITIAL_CLUSTER_STATE=new
 ETCD_NAME=$ec2_instance_hostname
 ETCD_INITIAL_CLUSTER=$etcd_initial_cluster
