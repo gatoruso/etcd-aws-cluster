@@ -10,6 +10,8 @@ RUN apk --update add \
       pip install --upgrade awscli &&\
       mkdir /root/.aws
 
+COPY LICENSE /LICENSE
+COPY README.md /README.md
 COPY etcd-aws-cluster /etcd-aws-cluster
 
 # Expose volume for adding credentials
