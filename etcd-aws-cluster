@@ -1,4 +1,7 @@
 #! /bin/bash
+if [ -n "$DEBUG" ]; then
+    set -x
+fi
 pkg="etcd-aws-cluster"
 version="0.5"
 etcd_env_file_path="/etc/sysconfig/etcd.env"
