@@ -3,7 +3,7 @@ if [ "$DEBUG" == "true" ]; then
     set -x
 fi
 pkg="etcd-aws-cluster"
-version="0.5"
+version="1.1"
 etcd_env_file_path="/etc/sysconfig/etcd.env"
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq --raw-output .region)
 if [[ ! $AWS_DEFAULT_REGION ]]; then
@@ -25,12 +25,6 @@ delete_gone=410
 retry_times=${RETRY_TIMES:-10}
 # Add a sleep time to allow etcd client requets to finish
 wait_time=3
-
-#if the script has already run just exit
-if [ -f "$etcd_env_file_path" ]; then
-    echo "$pkg: etcd-peers file $etcd_env_file_path already created, exiting"
-    exit 0
-fi
 
 ec2_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 if [[ ! $ec2_instance_id ]]; then
